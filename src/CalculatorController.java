@@ -45,7 +45,6 @@ public class CalculatorController extends Application {
                     }
                 }
             }
-
             previousClick = input;
         }
     }
