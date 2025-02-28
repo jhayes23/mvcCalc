@@ -33,21 +33,18 @@ public class CalculatorController extends Application {
     public void processButtonClick(ActionEvent event) {
         if(event.getSource() instanceof Button button) {
             input = button.getUserData().toString();
-            System.out.println("Button clicked: " + input);
             output = view.getDisplay();
 
-            if (input.equals("AC")) {
-                clearCalculator();
-            }
-            else if (input.equals("=")) {
-                processEquals();
-            }
-            else if (input.matches("[+\\-*/]")) {
-                 processOperator();
+            switch (input) {
+                case "AC" -> clearCalculator();
+                case "=" -> processEquals();
+                case "+", "-", "*", "/" -> processOperator();
+                default -> {
+                    if (input.matches("\\d+")) {
+                        processNum();
+                    }
                 }
-            else if (input.matches("\\d+")) {
-                processNum();
-                }
+            }
 
             previousClick = input;
         }
@@ -59,26 +56,24 @@ public class CalculatorController extends Application {
         }
         view.setDisplay(output.isEmpty() || output.equals("0") ? input : output.concat(input));
     }
+
     private void processOperator() {
         if (previousClick.matches("[+\\-*/]")) {
             model.setOperator(input);
         } else {
             if (!output.isEmpty()) {
-                model.pushOperand(Integer.parseInt(output), "Process  Operator");
+                model.pushOperand(Integer.parseInt(output));
             }
-
             if (model.getOperandSize() == 2 && model.getOperator() != null) {
-
-                model.pushOperand(computeAndDisplayResult(), "Process  Operator");
+                model.pushOperand(computeAndDisplayResult());
             }
-
             model.setOperator(input);
         }
     }
 
     private void processEquals() {
         if (!output.isEmpty() && model.getOperandSize() == 1 && !previousClick.matches("[+\\-*/=]")) {
-            model.pushOperand(Integer.parseInt(output), "Process  Equals");
+            model.pushOperand(Integer.parseInt(output));
         }
 
         if (model.getOperandSize() == 2 && model.getOperator() != null) {
@@ -86,7 +81,7 @@ public class CalculatorController extends Application {
         }
     }
     private void clearCalculator() {
-        view.setDisplay("");
+        view.setDisplay("0");
         model.clearOperands();
         model.clearOperator();
     }
@@ -98,5 +93,4 @@ public class CalculatorController extends Application {
 
         return result;
     }
-
-    }
+}

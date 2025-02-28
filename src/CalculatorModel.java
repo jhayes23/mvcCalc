@@ -10,15 +10,11 @@ public class CalculatorModel {
         this.operator = operator;
     }
     public void clearOperands(){operands.clear();}
-    public void pushOperand(int operand , String where) {
-        System.out.println("Pushed operand (operator click): " + operand + ", where click: " + where);
-        operands.push(operand);
-    }
+    public void pushOperand(int operand) {operands.push(operand);}
     public int getOperandSize(){return operands.size();}
     public int getCalculationResult() {
         int operand2 = operands.pop();
         int operand1 =  operands.pop();
-        System.out.println(operand1 + operator + operand2);
         return switch (operator) {
             case "+" -> operand1 + operand2;
             case "-" -> operand1 - operand2;

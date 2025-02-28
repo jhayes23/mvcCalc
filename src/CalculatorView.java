@@ -25,11 +25,10 @@ public class CalculatorView {
         primaryBox = new VBox();
         primaryBox.setAlignment(Pos.CENTER);
 
-        display = new Label("");
+        display = new Label("0");
         display.setFont(Font.font("Courier", FontWeight.BOLD, 24));
         display.setMinSize(200, 50);
         display.setAlignment(Pos.CENTER_RIGHT);
-
 
         GridPane buttonsGrid = new GridPane();
         buttonsGrid.setHgap(5);
