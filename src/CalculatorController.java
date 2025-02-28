@@ -22,6 +22,7 @@ public class CalculatorController extends Application {
         Scene scene = new Scene(calcController.view.getParent(), 250, 300);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Calculator");
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
     public static void main(String[] args) {
