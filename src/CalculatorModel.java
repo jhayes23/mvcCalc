@@ -2,7 +2,7 @@ import java.util.Stack;
 
 public class CalculatorModel {
     private final Stack<Integer> operands = new Stack<>();
-    private String operator;
+    private String operator = null;
 
     public void clearOperator(){operator = null;}
     public String getOperator(){return operator;}
@@ -10,13 +10,15 @@ public class CalculatorModel {
         this.operator = operator;
     }
     public void clearOperands(){operands.clear();}
-    public void pushOperand(int operand) {
+    public void pushOperand(int operand , String where) {
+        System.out.println("Pushed operand (operator click): " + operand + ", where click: " + where);
         operands.push(operand);
     }
-    public boolean operandIsEmpty(){return !operands.isEmpty();}
+    public int getOperandSize(){return operands.size();}
     public int getCalculationResult() {
         int operand2 = operands.pop();
         int operand1 =  operands.pop();
+        System.out.println(operand1 + operator + operand2);
         return switch (operator) {
             case "+" -> operand1 + operand2;
             case "-" -> operand1 - operand2;

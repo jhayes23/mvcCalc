@@ -1,14 +1,15 @@
 import javafx.application.Application;
-import javafx.event.*;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class CalculatorController extends Application {
     private final CalculatorView view;
     private final CalculatorModel model;
-    private boolean resetCalculator = false;
+    private String previousClick = "";
+    private String input;
+    private String output;
 
     public CalculatorController() {
         view = new CalculatorView();
@@ -31,41 +32,71 @@ public class CalculatorController extends Application {
 
     public void processButtonClick(ActionEvent event) {
         if(event.getSource() instanceof Button button) {
-            String input = button.getUserData().toString();
+            input = button.getUserData().toString();
+            System.out.println("Button clicked: " + input);
+            output = view.getDisplay();
 
             if (input.equals("AC")) {
-                view.setDisplay("0");
-                model.clearOperands();
-                model.clearOperator();
+                clearCalculator();
+            }
+            else if (input.equals("=")) {
+                processEquals();
             }
             else if (input.matches("[+\\-*/]")) {
-                if( model.getOperator()== null) {
-                    model.pushOperand(Integer.parseInt(view.getDisplay()));
-                    view.setDisplay("0");
+                 processOperator();
                 }
-                model.setOperator(input);
-            }
-            else if(input.matches("\\d+")) {
-                if(resetCalculator) {
-                    view.setDisplay("0");
-                    resetCalculator = false;
+            else if (input.matches("\\d+")) {
+                processNum();
                 }
-                view.setDisplay(view.getDisplay().equals("0") ? input : view.getDisplay().concat(input));
-            }
-            else if(input.equals("=")){
-                if (model.operandIsEmpty() && !model.getOperator().isEmpty() && !view.getDisplay().equals("0")) {
-                    model.pushOperand(Integer.parseInt(view.getDisplay()));
 
-                    int result = model.getCalculationResult();
-                    view.setDisplay(String.valueOf(result));
+            previousClick = input;
+        }
+    }
 
-                    model.clearOperands();
-                    model.clearOperator();
-                    resetCalculator = true;
-                }
+    private void processNum() {
+        if (previousClick.matches("[=+\\-*/]") && !output.isEmpty()) {
+           output = "";
+        }
+        view.setDisplay(output.isEmpty() || output.equals("0") ? input : output.concat(input));
+    }
+    private void processOperator() {
+        if (previousClick.matches("[+\\-*/]")) {
+            model.setOperator(input);
+        } else {
+            if (!output.isEmpty()) {
+                model.pushOperand(Integer.parseInt(output), "Process  Operator");
             }
 
+            if (model.getOperandSize() == 2 && model.getOperator() != null) {
+
+                model.pushOperand(computeAndDisplayResult(), "Process  Operator");
+            }
+
+            model.setOperator(input);
+        }
+    }
+
+    private void processEquals() {
+        if (!output.isEmpty() && model.getOperandSize() == 1 && !previousClick.matches("[+\\-*/=]")) {
+            model.pushOperand(Integer.parseInt(output), "Process  Equals");
         }
 
+        if (model.getOperandSize() == 2 && model.getOperator() != null) {
+            computeAndDisplayResult();
+        }
     }
-}
+    private void clearCalculator() {
+        view.setDisplay("");
+        model.clearOperands();
+        model.clearOperator();
+    }
+    private int computeAndDisplayResult() {
+        int result = model.getCalculationResult();
+        view.setDisplay(String.valueOf(result));
+        model.clearOperands();
+        model.clearOperator();
+
+        return result;
+    }
+
+    }

@@ -1,4 +1,5 @@
-import javafx.event.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -24,7 +25,7 @@ public class CalculatorView {
         primaryBox = new VBox();
         primaryBox.setAlignment(Pos.CENTER);
 
-        display = new Label("0");
+        display = new Label("");
         display.setFont(Font.font("Courier", FontWeight.BOLD, 24));
         display.setMinSize(200, 50);
         display.setAlignment(Pos.CENTER_RIGHT);
